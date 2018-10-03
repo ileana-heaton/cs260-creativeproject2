@@ -60,10 +60,12 @@
                                 var name = (days[date][obj].name);
                                 var magnitude = (days[date][obj].absolute_magnitude_h);
                                 var distance = (days[date][obj].close_approach_data[0].miss_distance.miles);
+                                var velocity = (days[date][obj].close_approach_data[0].relative_velocity.miles_per_hour);
                                 //var size = (days[date][obj].est);
                                 everything += "<li> name: " + name;
                                 everything += "<li> magnitute: " + magnitude;
-                                everything += "<li> Distance From earth: " + distance + " miles";
+                                everything += "<li> Distance From Earth: " + distance + " miles";
+                                everything += "<li> Velocity of object: " + velocity + " miles per hour";
                                 everything += "<br><br>"
     
                             }
