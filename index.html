@@ -1,92 +1,110 @@
-
 <html>
+
 <head>
-<title>City Finder</title>
+    <title>City Finder</title>
 
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="main.css" media="screen" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="main.css" media="screen" />
 
-<script  src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>
-    /*global $*/
-    $(document).ready(function() {
-        
-        //sets up daily NASA picture as background image
-        var apiKey = "tWFdzns2p2oC3vwYBoHZX8yX0dWqrosxpAnCAbcL";
-        var myurl = "https://api.nasa.gov/planetary/apod?api_key="+ apiKey;
-        // myurl += cityValue;
-        console.log("nasa API url: " + myurl);
-         $.ajax({
-                url : myurl,
-                dataType : "json",
-                success : function(data) {
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        /*global $*/
+        $(document).ready(function() {
+
+            //sets up daily NASA picture as background image
+            var apiKey = "tWFdzns2p2oC3vwYBoHZX8yX0dWqrosxpAnCAbcL";
+            var myurl = "https://api.nasa.gov/planetary/apod?api_key=" + apiKey;
+            // myurl += cityValue;
+            console.log("nasa API url: " + myurl);
+            $.ajax({
+                url: myurl,
+                dataType: "json",
+                success: function(data) {
                     console.log(data);
                     var APODimage = data['hdurl'];
                     $("body").css("background-image", "url('" + APODimage + "')");
                 }
             });
-        
-        
-        //get list button is clicked, gets list of near-earth objects in the date range specified
-        $("#submit").click(function(e){
-            var month = $("#month").val();
-            var day = $("#day").val();
-            var year = $("#year").val();
-            e.preventDefault();
-            
-            //create api call url
-            var apiKey = "tWFdzns2p2oC3vwYBoHZX8yX0dWqrosxpAnCAbcL";
-            var myurl = "https://api.nasa.gov/neo/rest/v1/feed?start_date=" + year +"-" +
-                month + "-" + day + "&api_key="+ apiKey;
-            console.log("object list API: " + myurl);
-            var everything;
-            $.ajax({
-                url : myurl,
-                dataType : "json",
-                success : function(parsed_json) {
-                 var name = parsed_json['near_earth_objects'][0]['name'];
-                 var velocity = parsed_json["relative_velocity"];
-                 var size = parsed_json["absolute_magnitude_h"];
-                 var number = parsed_json["element_count"];
-                 everything = "<li> name: " + name;
-                 everything += "<li> velocity: " + velocity;
-                 everything += "<li> size: " + size;
-                 everything += "<li> number: " + number;
-                 
-                // success : function(data) {
-                //     console.log(data);
-                //     var objectList = data['hdurl'];
-                //     var everything;
-                //     everything = "<ul>";
-                //     $.each(item.near_earth_objects, function(i,item) {
-                //      everything += "<li> "+ item.near_earth_objects;
-                //     });
-                // everything += "</ul>";
-                $("#search").html(everything);
-                }
+
+
+            //get list button is clicked, gets list of near-earth objects in the date range specified
+            $("#submit").click(function(e) {
+                var month = $("#month").val();
+                var day = $("#day").val();
+                var year = $("#year").val();
+                e.preventDefault();
+
+                //create api call url
+                var apiKey = "tWFdzns2p2oC3vwYBoHZX8yX0dWqrosxpAnCAbcL";
+                var myurl = "https://api.nasa.gov/neo/rest/v1/feed?start_date=" + year + "-" +
+                    month + "-" + day + "&api_key=" + apiKey;
+                console.log("object list API: " + myurl);
+                $.ajax({
+                    url: myurl,
+                    dataType: "json",
+                    success: function(parsed_json) {
+                        //console.log(parsed_json);
+                        var days = parsed_json['near_earth_objects'];
+                        //var date;
+                        var everything ="<ul>";
+                        for (date in days) {
+                            console.log(date);
+                            console.log(days[date]);
+                            for (obj in days[date]) {
+                                var name = (days[date][obj].name);
+                                var magnitude = (days[date][obj].absolute_magnitude_h);
+                                var distance = (days[date][obj].close_approach_data[0].miss_distance.miles);
+                                //var size = (days[date][obj].est);
+                                everything += "<li> name: " + name;
+                                everything += "<li> magnitute: " + magnitude;
+                                everything += "<li> Distance From earth: " + distance + " miles";
+                                everything += "<br><br>"
+    
+                            }
+                        }
+                                $("#search").html(everything);
+                        // console.log();
+                        // var velocity = parsed_json['near_earth_objects']['2020-01-13']['0']["relative_velocity"];
+                        // var size = parsed_json["absolute_magnitude_h"];
+                        // var number = parsed_json["element_count"];
+                        // everything += "<li> velocity: " + velocity;
+                        // everything += "<li> size: " + size;
+                        // everything += "<li> number: " + number;
+
+                        // success : function(data) {
+                        //     console.log(data);
+                        //     var objectList = data['hdurl'];
+                        //     var everything;
+                        //     everything = "<ul>";
+                        //     $.each(item.near_earth_objects, function(i,item) {
+                        //      everything += "<li> "+ item.near_earth_objects;
+                        //     });
+                        // everything += "</ul>";
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 
 
 </head>
-    <body id = "body">
-        <div id="backgroundDiv">
+
+<body id="body">
+    <div id="backgroundDiv">
         <h1>Find Near Earth Objects</h1>
         <br><br>
-        
+
         <div>
-          <form action="/action_page.php">
-            <label for="month">Month</label>
-            <select id="month" name="monthField">
+            <form action="/action_page.php">
+                <label for="month">Month</label>
+                <select id="month" name="monthField">
                 <option value = "01">January</option>
                 <option value = "02">February</option>
                 <option value = "03">March</option>
@@ -100,18 +118,19 @@
                 <option value = "11">November</option>
                 <option value = "12">December</option>
             </select>
-            
-        
-            <label for="day">Day</label>
-            <input type="number" id="day" name="dayField" placeholder="Day" min="1" max="31">
-        
-            <label for="year">Year</label>
-            <input type="number" id="year" name="yearField" placeholder="Year" min="1900" max="2200">
-            
-            <button id="submit" value="Submit">Submit</button><br>
-            <p id = "search"></p>
-          </form>
+
+
+                <label for="day">Day</label>
+                <input type="number" id="day" name="dayField" placeholder="Day" min="1" max="31">
+
+                <label for="year">Year</label>
+                <input type="number" id="year" name="yearField" placeholder="Year" min="1900" max="2200">
+
+                <button id="submit" value="Submit">Submit</button><br>
+                <p id="search"></p>
+            </form>
         </div>
-        
-    </body>
+
+</body>
+
 </html>
