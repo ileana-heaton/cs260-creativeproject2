@@ -52,7 +52,7 @@
                         //console.log(parsed_json);
                         var days = parsed_json['near_earth_objects'];
                         //var date;
-                        var everything ="<ul>";
+                        var everything = "<ul>";
                         for (date in days) {
                             console.log(date);
                             console.log(days[date]);
@@ -69,11 +69,11 @@
                                 everything += "<li> Distance From Earth: " + distance + " miles";
                                 everything += "<li> Velocity of object: " + Math.round(velocity) + " mph";
                                 everything += "<li> Potential Hazard? " + hazard;
-                                everything += "<br><br>"
-    
+                                everything += "<br>----------------------------------------------<br><br>"
+
                             }
                         }
-                                $("#search").html(everything);
+                        $("#search").html(everything);
                         // console.log();
                         // var velocity = parsed_json['near_earth_objects']['2020-01-13']['0']["relative_velocity"];
                         // var size = parsed_json["absolute_magnitude_h"];
@@ -129,9 +129,21 @@
                 <input type="number" id="year" name="yearField" placeholder="Year" min="1900" max="2200">
 
                 <button id="submit" value="Submit">Submit</button><br>
-                <p id="search"></p>
+
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p id="search"></p>
+                               <br>
+                            <p class="text-center"></p>
+                        </div>
+                        <div class="col-sm-6 text-center">
+                            <img src="https://media.nationalgeographic.org/assets/interactives/433/90b/43390b12-c7c2-450e-94de-ac2e04b52359/public/splash/images/asteroid.png" width="100">
+                            
+                        </div>
+                    </div>
             </form>
-        </div>
+            </div>
 
 </body>
 
