@@ -63,11 +63,11 @@
                                 var velocity = (days[date][obj].close_approach_data[0].relative_velocity.miles_per_hour);
                                 var hazard = (days[date][obj].is_potentially_hazardous_asteroid);
                                 var size = (days[date][obj].estimated_diameter.meters.estimated_diameter_max);
-                                everything += "<li> name: " + name;
-                                everything += "<li> size: " + size + " meters";
-                                everything += "<li> magnitute: " + magnitude;
+                                everything += "<li> Name: " + name;
+                                everything += "<li> Diameter: " + Math.round(size) + " meters";
+                                everything += "<li> Absolute magnitute: " + magnitude;
                                 everything += "<li> Distance From Earth: " + distance + " miles";
-                                everything += "<li> Velocity of object: " + velocity + " miles per hour";
+                                everything += "<li> Velocity of object: " + Math.round(velocity) + " mph";
                                 everything += "<li> Potential Hazard? " + hazard;
                                 everything += "<br><br>"
     
