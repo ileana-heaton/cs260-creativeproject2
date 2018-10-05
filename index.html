@@ -19,8 +19,15 @@
 
             //sets up daily NASA picture as background image
             var apiKey = "tWFdzns2p2oC3vwYBoHZX8yX0dWqrosxpAnCAbcL";
-            var myurl = "https://api.nasa.gov/planetary/apod?api_key=" + apiKey;
-            // myurl += cityValue;
+            
+// cooler pictures:
+// date=2018-09-27&
+// date=2018-09-28&
+// date=2018-10-03&
+            //uncomment for nicer picture if today's if ugly.. haha
+            var myurl = "https://api.nasa.gov/planetary/apod?date=2018-09-28&api_key=" + apiKey;
+
+            // var myurl = "https://api.nasa.gov/planetary/apod?api_key=" + apiKey;
             console.log("nasa API url: " + myurl);
             $.ajax({
                 url: myurl,
@@ -51,15 +58,10 @@
                     success: function(parsed_json) {
                         //console.log(parsed_json);
                         var days = parsed_json['near_earth_objects'];
-                        //var date;
-                        // var everything = "<ul><br><br>";
-                        // var asteroidEverything = "";
-
-                        //new stuff here:
-                        var everything = "";
-
-
-
+                        var date, obj;
+                        
+                        var everything = "<p style='text-align: center'>* Estimated height of 2 meters for a man and 6 meters for a T-Rex. </p>";
+                        
                         for (date in days) {
                             console.log(date);
                             console.log(days[date]);
@@ -70,48 +72,46 @@
                                 var velocity = (days[date][obj].close_approach_data[0].relative_velocity.miles_per_hour);
                                 var hazard = (days[date][obj].is_potentially_hazardous_asteroid);
                                 var size = (days[date][obj].estimated_diameter.meters.estimated_diameter_max);
-                                //                                 everything += "<li> Name: " + name;
-                                //                                 everything += "<li> Diameter: " + Math.round(size) + " meters";
-                                //                                 everything += "<li> Absolute magnitute: " + magnitude;
-                                //                                 everything += "<li> Distance From Earth: " + distance + " miles";
-                                //                                 everything += "<li> Velocity of object: " + Math.round(velocity) + " mph";
-                                //                                 everything += "<li> Potential Hazard? " + hazard;
-                                //                                 everything += "<br>----------------------------------------------<br><br><br><br>"
+//                                 everything += "<li> Name: " + name;
+//                                 everything += "<li> Diameter: " + Math.round(size) + " meters";
+//                                 everything += "<li> Absolute magnitute: " + magnitude;
+//                                 everything += "<li> Distance From Earth: " + distance + " miles";
+//                                 everything += "<li> Velocity of object: " + Math.round(velocity) + " mph";
+//                                 everything += "<li> Potential Hazard? " + hazard;
+//                                 everything += "<br>----------------------------------------------<br><br><br><br>"
 
-                                // // ___/200 = 2/size
-                                //                                 asteroidEverything += "<img src='trex.png' height='" + 10/size*200 +"'>";
-                                //                                 asteroidEverything += "<img src='asteroid.png' height='200'><br>";
-
-
-                                //new stuff here:
+                                //asteroid information here
                                 var information = "<ul>";
                                 information += "<li> Name: " + name;
                                 information += "<li> Diameter: " + Math.round(size) + " meters";
                                 information += "<li> Absolute magnitute: " + magnitude;
                                 information += "<li> Distance From Earth: " + distance + " miles";
                                 information += "<li> Velocity of object: " + Math.round(velocity) + " mph";
-                                information += "<li> Potential Hazard? " + hazard;
+                                if(hazard==true){
+                                    hazard = "Yes"
+                                }
+                                else{
+                                    hazard="No"
+                                }
+                                information += "<li> Potential Hazard?: " + hazard;
                                 information += "</ul>"
 
-
-                                // append informationo for this asteroid
+                                // append information for this asteroid (first column)
                                 everything += '<div class="row"> <div class="col-sm-6">';
                                 everything += '<br><br>' + information;
                                 everything += '</div> <div class="col-sm-6 text-center">';
 
-                                // append pictures
-                                everything += "<img src='trex.png' height='" + 10/size*200 +"'>";
-                                everything += "<img src='asteroid.png' height='200'>";
+                                // append pictures (second column)
+                                everything += "<img src='man.png' height='" + 1.7/size*200 +"' style='vertical-align: bottom;'>";
+                                everything += "<img src='trex.png' height='" + 6/size*200 +"' style='vertical-align: bottom;'>";
+                                everything += "<img src='asteroid.png' height='200' style='vertical-align: bottom;'>";
                                 everything += '</div></div><hr>';
                                 
-                                console.log(everything);
+                                // console.log(everything);
                             }
                         }
+                        $('#grid').empty();
                         $("#grid").append(everything);
-                        // $("#search").html(everything);
-                        // $("#asteroidImages").html(asteroidEverything);
-
-
                     }
                 });
             });
@@ -122,13 +122,14 @@
 
 <body id="body">
     <div id="backgroundDiv">
-        <h1>Find Near Earth Objects</h1>
+        <h1>Near Earth Objects</h1>
         <br><br>
+        <p>Explore NASA's list of near earth objects by date!</p>
 
         <div>
             <form action="/action_page.php">
                 <label for="month">Month</label>
-                <select id="month" name="monthField">
+                <select id="month" name="monthField" >
                 <option value = "01">January</option>
                 <option value = "02">February</option>
                 <option value = "03">March</option>
@@ -138,16 +139,16 @@
                 <option value = "07">July</option>
                 <option value = "08">August</option>
                 <option value = "09">September</option>
-                <option value = "10">October</option>
+                <option value = "10" selected>October</option>
                 <option value = "11">November</option>
                 <option value = "12">December</option>
             </select>
 
                 <label for="day">Day</label>
-                <input type="number" id="day" name="dayField" placeholder="Day" min="1" max="31" value="10">
+                <input type="number" id="day" name="dayField" placeholder="Day" min="1" max="31" value="5">
 
                 <label for="year">Year</label>
-                <input type="number" id="year" name="yearField" placeholder="Year" min="1900" max="2200" value="2020">
+                <input type="number" id="year" name="yearField" placeholder="Year" min="1900" max="2200" value="2018">
 
                 <button id="submit" value="Submit">Submit</button><br>
             </form>
@@ -155,19 +156,17 @@
 
         <div class="container-fluid" id="grid">
             <!--<div class="row">-->
-            <!--<div class="col-sm-6">-->
-            <!--    <p id="search"></p>-->
+                <!--<div class="col-sm-6">-->
+                <!--    <p id="search"></p>-->
+                <!--</div>-->
+                <!--<div class="col-sm-6">-->
+                <!--    <p id="asteroidImages"></p>-->
+                <!--</div>-->
             <!--</div>-->
-            <!--<div class="col-sm-6">-->
-            <!--    <p id="asteroidImages"></p>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            
-
-    <!-- don't erase this next div closing tag-->
     </div>
-    <!--close container-fluid-->
+    
+    <br><br><br>
+    <p style="color: gray; text-align: center">Background image courtesy of NASA's Astronomy Picture of the Day.</p>
 
 </body>
 
